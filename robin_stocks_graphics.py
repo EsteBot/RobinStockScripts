@@ -263,10 +263,7 @@ def asset_class_compare_sctr_plt():
     sizes2 = [tot_safe_equ_chg, equ_chg_sum, total_crypto_equ_rtn]
     colors = ['blue', 'orange', crypt_color]
 
-    # create figure with two subplots
-    
-    ax4 = ax3.twinx()  # Create a secondary y-axis
-    ax5 = ax4.twinx()  # Create a secondary y-axis
+    fig = plt.gcf()
 
     # create custom label string
     def make_autopct(values):
@@ -275,12 +272,14 @@ def asset_class_compare_sctr_plt():
             val = int(round(pct * total / 100.0))
             return '{p:.1f}%\n(${v:d})'.format(p=pct, v=val)
         return my_autopct
-
+    
+    ax4 = fig.add_axes([0.1, 0.1, 0.35, 0.35])
     # create pie chart with custom labels
     ax4.pie(sizes1, labels=labels1, colors=colors, autopct=make_autopct(sizes1))
     ax4.set_title('AST Distribution')
 
     # create second pie chart
+    ax5 = fig.add_axes([0.1, 0.1, 0.75, 0.75])
     ax5.pie(sizes2, labels=labels2, colors=colors, autopct=make_autopct(sizes2))
     ax5.set_title('ROI Distribution')
 
