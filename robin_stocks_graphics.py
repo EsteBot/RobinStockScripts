@@ -217,7 +217,7 @@ def asset_class_compare_sctr_plt():
         print(df_now)
 
         # Create a subplots plot of the DataFrames
-        fig, (ax1, ax2, ax3) = plt.subplots(3)
+        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5)
 
         # Add title and axis labels
         fig.suptitle("eBot's Asset Comparision", 
@@ -232,22 +232,8 @@ def asset_class_compare_sctr_plt():
         ax3.set_xlabel('')
         ax3.set_ylabel('Total Change')
         ax3.set_title('')
-        
-        # Create scatter plots with lines connecting the points
-        df_pct.plot(ax=ax1, marker = 'o', linestyle = '-')
-        df_equ.plot(ax=ax2, marker = 'o', linestyle = '-')
-        df_now.plot.bar(ax=ax3, color = ['blue', 'blue', 'orange', 'orange', 'green', 'green'])      
-
-        # Add total values to the top of the bars
-        for i, v in enumerate(df_now):
-            ax3.text(i, v, str(v), color='grey', ha='center')
-
-
-        # Adjust subplot spacing
-        plt.subplots_adjust(hspace=0.4)
-
-        # Show the plot
-        #plt.show()
+        ax4.set_title('AST Distribution')
+        ax5.set_title('ROI Distribution')
 
     # Principle amounts by class data
     labels1 = ['VOO&BRK', 'EstvWld', 'Cryptic']
@@ -263,8 +249,6 @@ def asset_class_compare_sctr_plt():
     sizes2 = [tot_safe_equ_chg, equ_chg_sum, total_crypto_equ_rtn]
     colors = ['blue', 'orange', crypt_color]
 
-    fig = plt.gcf()
-
     # create custom label string
     def make_autopct(values):
         def my_autopct(pct):
@@ -272,19 +256,24 @@ def asset_class_compare_sctr_plt():
             val = int(round(pct * total / 100.0))
             return '{p:.1f}%\n(${v:d})'.format(p=pct, v=val)
         return my_autopct
-    
-    ax4 = fig.add_axes([0.1, 0.1, 0.35, 0.35])
-    # create pie chart with custom labels
+        
+    # Create scatter plots with lines connecting the points
+    df_pct.plot(ax=ax1, marker = 'o', linestyle = '-')
+    df_equ.plot(ax=ax2, marker = 'o', linestyle = '-')
+    df_now.plot.bar(ax=ax3, color = ['blue', 'blue', 'orange', 'orange', 'green', 'green'])      
     ax4.pie(sizes1, labels=labels1, colors=colors, autopct=make_autopct(sizes1))
-    ax4.set_title('AST Distribution')
-
-    # create second pie chart
-    ax5 = fig.add_axes([0.1, 0.1, 0.75, 0.75])
     ax5.pie(sizes2, labels=labels2, colors=colors, autopct=make_autopct(sizes2))
-    ax5.set_title('ROI Distribution')
+    
+    ax3.tick_params(axis='x', rotation=45)  # Adjust the rotation angle as per your preference
 
-    # adjust layout and display plot
-    plt.tight_layout()
+    # Add total values to the top of the bars
+    for i, v in enumerate(df_now):
+        ax3.text(i, v, str(v), color='grey', ha='center')
+
+
+    # Adjust subplot spacing
+    plt.subplots_adjust(hspace=0.8)
+
     plt.show()
 
 asset_class_compare_sctr_plt()
