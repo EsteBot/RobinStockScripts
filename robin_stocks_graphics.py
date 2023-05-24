@@ -219,10 +219,20 @@ def asset_class_compare_sctr_plt():
         # Create a subplots plot of the DataFrames
         fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5)
 
+        # Set the grid size for subplot2grid
+        grid_size = (3, 3)  # 3 rows and 3 columns
+
         # Add title and axis labels
         fig.suptitle("eBot's Asset Comparision", 
                      fontsize=15, x=.5, y=.94, fontweight='bold', ha='center')
         
+        # Create a subplot using subplot2grid
+        ax1 = plt.subplot2grid(grid_size, (0, 0), colspan=3)  # Located at row 0, column 0
+        ax2 = plt.subplot2grid(grid_size, (1, 0), colspan=3)  # Located at row 0, column 1
+        ax3 = plt.subplot2grid(grid_size, (2, 0))  # Located at row 1, column 0, span 2 columns
+        ax4 = plt.subplot2grid(grid_size, (2, 1))  # Located at row 2, column 0
+        ax5 = plt.subplot2grid(grid_size, (2, 2))  # Located at row 2, column 1
+
         ax1.set_xlabel('Date')
         ax1.set_ylabel('$ Change')
         ax1.set_title('')
@@ -264,7 +274,7 @@ def asset_class_compare_sctr_plt():
     ax4.pie(sizes1, labels=labels1, colors=colors, autopct=make_autopct(sizes1))
     ax5.pie(sizes2, labels=labels2, colors=colors, autopct=make_autopct(sizes2))
     
-    ax3.tick_params(axis='x', rotation=45)  # Adjust the rotation angle as per your preference
+    ax3.tick_params(axis='x', rotation=90)  # Adjust the rotation angle as per your preference
 
     # Add total values to the top of the bars
     for i, v in enumerate(df_now):
