@@ -216,15 +216,22 @@ def asset_class_compare_sctr_plt():
         df_now = df.iloc[-1]
         print(df_now)
 
-        # Create a subplots plot of the DataFrames
+        # Create a subplots plot of the diff
         fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5)
 
         # Set the grid size for subplot2grid
         grid_size = (3, 3)  # 3 rows and 3 columns
 
-        # Add title and axis labels
+        # Add fig title
         fig.suptitle("eBot's Asset Comparision", 
                      fontsize=15, x=.5, y=.94, fontweight='bold', ha='center')
+        
+        # Remove subplots used to create fig title
+        ax1.remove()
+        ax2.remove()
+        ax3.remove()
+        ax4.remove()
+        ax5.remove()
         
         # Create a subplot using subplot2grid
         ax1 = plt.subplot2grid(grid_size, (0, 0), colspan=3)  # Located at row 0, column 0
@@ -233,57 +240,55 @@ def asset_class_compare_sctr_plt():
         ax4 = plt.subplot2grid(grid_size, (2, 1))  # Located at row 2, column 0
         ax5 = plt.subplot2grid(grid_size, (2, 2))  # Located at row 2, column 1
 
+        # Add axis labels
         ax1.set_xlabel('Date')
         ax1.set_ylabel('$ Change')
-        ax1.set_title('')
         ax2.set_xlabel('Date')
         ax2.set_ylabel('% Change')
-        ax2.set_title('')
-        ax3.set_xlabel('')
         ax3.set_ylabel('Total Change')
-        ax3.set_title('')
+        # Create scatter plots with lines connecting the points
+        df_pct.plot(ax=ax1, marker = 'o', linestyle = '-')
+        df_equ.plot(ax=ax2, marker = 'o', linestyle = '-')
+        df_now.plot.bar(ax=ax3, color = ['blue', 'blue', 'orange', 'orange', 'green', 'green'])      
+        
         ax4.set_title('AST Distribution')
         ax5.set_title('ROI Distribution')
 
-    # Principle amounts by class data
-    labels1 = ['VOO&BRK', 'EstvWld', 'Cryptic']
-    sizes1 = [tot_safe_princpl, avgXown_sum, crypto_principal_totl]
-    colors = ['blue', 'orange', 'green']
-    # ROI amounts by class data
-    labels2 = ['VOO&BRK', 'EstvWld', 'Cryptic']
-    # if statement to change color if value becomes negative
-    if total_crypto_equ_rtn <= 0:
-        total_crypto_equ_rtn = abs(total_crypto_equ_rtn)
-        crypt_color = 'red'
-    else: crypt_color = 'green'
-    sizes2 = [tot_safe_equ_chg, equ_chg_sum, total_crypto_equ_rtn]
-    colors = ['blue', 'orange', crypt_color]
+        ax3.tick_params(axis='x', rotation=90)  # Adjust the rotation angle as per your preference
 
-    # create custom label string
-    def make_autopct(values):
-        def my_autopct(pct):
-            total = sum(values)
-            val = int(round(pct * total / 100.0))
-            return '{p:.1f}%\n(${v:d})'.format(p=pct, v=val)
-        return my_autopct
+        # Add total values to the top of the bars
+        for i, v in enumerate(df_now):
+            ax3.text(i, v, str(v), color='grey', ha='center')
+
+
+        # Principle amounts by class data
+        labels1 = ['VOO&BRK', 'EstvWld', 'Cryptic']
+        sizes1 = [tot_safe_princpl, avgXown_sum, crypto_principal_totl]
+        colors = ['blue', 'orange', 'green']
+        # ROI amounts by class data
+        labels2 = ['VOO&BRK', 'EstvWld', 'Cryptic']
+        # if statement to change color if value becomes negative
+        if total_crypto_equ_rtn <= 0:
+            total_crypto_equ_rtn = abs(total_crypto_equ_rtn)
+            crypt_color = 'red'
+        else: crypt_color = 'green'
+        sizes2 = [tot_safe_equ_chg, equ_chg_sum, total_crypto_equ_rtn]
+        colors = ['blue', 'orange', crypt_color]
+
+        # create custom label string
+        def make_autopct(values):
+            def my_autopct(pct):
+                total = sum(values)
+                val = int(round(pct * total / 100.0))
+                return '{p:.1f}%\n(${v:d})'.format(p=pct, v=val)
+            return my_autopct
+            
+        ax4.pie(sizes1, labels=labels1, colors=colors, autopct=make_autopct(sizes1))
+        ax5.pie(sizes2, labels=labels2, colors=colors, autopct=make_autopct(sizes2))
         
-    # Create scatter plots with lines connecting the points
-    df_pct.plot(ax=ax1, marker = 'o', linestyle = '-')
-    df_equ.plot(ax=ax2, marker = 'o', linestyle = '-')
-    df_now.plot.bar(ax=ax3, color = ['blue', 'blue', 'orange', 'orange', 'green', 'green'])      
-    ax4.pie(sizes1, labels=labels1, colors=colors, autopct=make_autopct(sizes1))
-    ax5.pie(sizes2, labels=labels2, colors=colors, autopct=make_autopct(sizes2))
-    
-    ax3.tick_params(axis='x', rotation=90)  # Adjust the rotation angle as per your preference
+        # Adjust subplot spacing
+        plt.subplots_adjust(hspace=0.8)
 
-    # Add total values to the top of the bars
-    for i, v in enumerate(df_now):
-        ax3.text(i, v, str(v), color='grey', ha='center')
-
-
-    # Adjust subplot spacing
-    plt.subplots_adjust(hspace=0.8)
-
-    plt.show()
+        plt.show()
 
 asset_class_compare_sctr_plt()
