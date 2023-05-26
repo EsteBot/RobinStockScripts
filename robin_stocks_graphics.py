@@ -214,7 +214,7 @@ def asset_class_compare_sctr_plt():
         #print(df_equ)
 
         df_now = df.iloc[-1]
-        print(df_now)
+        #print(df_now)
 
         # Create a subplots plot of the diff
         fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5)
